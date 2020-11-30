@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
@@ -17,7 +18,6 @@ import shapes.Star;
 public class Java2D extends JFrame{
 
 	public static void main(String[] args) {
-		
 		
 		JFrame frame = new Java2D();
 		frame.setTitle("Java 2D - David Júlio");
@@ -44,14 +44,14 @@ class MyPanel extends JPanel{
 	//Player - Using ellipse
 	int radius = 15;
 	Shape player;
-	int translationX = 0 + radius * 2;
+	int translationX = radius * 2;
 	int translationY = panelHeight - radius * 2;
 	
 	//Star 
 	Shape star1 = new Star(-radius, -radius, radius*2, radius*2);
 	
-	//Border
-	Shape border = new Rectangle2D.Double(5, 5, panelWidth -5, panelHeight - 5);
+	//Obstacles
+	Shape obs1 = new Rectangle2D.Double(-30, -100, 60, 200);
 	
 	public MyPanel() {
 		setPreferredSize( new Dimension( panelWidth, panelHeight ) ); 
@@ -75,11 +75,12 @@ class MyPanel extends JPanel{
 		g2.setColor(Color.YELLOW);
 		g2.fill(star1);
 		
-		//Border
-		g2.setColor(Color.BLACK);
-		g2.draw(border);
-	
 		
+		//Obstacles
+		at.setToTranslation(100, panelHeight - 100);
+		obs1 = at.createTransformedShape(obs1);
+		g2.setColor(Color.BLUE);
+		g2.fill(obs1);
 	}
 	
 }
