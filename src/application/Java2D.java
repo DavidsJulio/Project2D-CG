@@ -7,9 +7,12 @@ import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
+import java.awt.geom.Rectangle2D;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+
+import shapes.Star;
 
 public class Java2D extends JFrame{
 
@@ -41,9 +44,14 @@ class MyPanel extends JPanel{
 	//Player - Using ellipse
 	int radius = 15;
 	Shape player;
-	int translationX = 0 + 2*radius;
-	int translationY = panelHeight - 2*radius;
+	int translationX = 0 + radius * 2;
+	int translationY = panelHeight - radius * 2;
 	
+	//Star 
+	Shape star1 = new Star(-radius, -radius, radius*2, radius*2);
+	
+	//Border
+	Shape border = new Rectangle2D.Double(5, 5, panelWidth -5, panelHeight - 5);
 	
 	public MyPanel() {
 		setPreferredSize( new Dimension( panelWidth, panelHeight ) ); 
@@ -54,12 +62,22 @@ class MyPanel extends JPanel{
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D) g;
 
-		
+		//player
 		player = new Ellipse2D.Double(-radius, -radius, 2*radius, 2*radius);
 		at.setToTranslation(translationX, translationY);
 		player = at.createTransformedShape(player);
 		g2.setColor(Color.RED);
 		g2.fill(player);
+		
+		//Star
+		at.setToTranslation(300, 200);
+		star1 = at.createTransformedShape(star1);
+		g2.setColor(Color.YELLOW);
+		g2.fill(star1);
+		
+		//Border
+		g2.setColor(Color.BLACK);
+		g2.draw(border);
 	
 		
 	}
