@@ -39,19 +39,22 @@ class MyPanel extends JPanel{
 	int panelWidth = 600;
 	int panelHeight = 400;
 	
+	int scale = 15;
+	
 	AffineTransform at = new AffineTransform();
 	
 	//Player - Using ellipse
-	int radius = 15;
 	Shape player;
-	int translationX = radius * 2;
-	int translationY = panelHeight - radius * 2;
+	int translationX = scale * 2;
+	int translationY = panelHeight - scale * 2;
 	
 	//Star 
-	Shape star1 = new Star(-radius, -radius, radius*2, radius*2);
+	Shape star1 = new Star( -scale, -scale, scale * 2, scale * 2 );
 	
 	//Obstacles
-	Shape obs1 = new Rectangle2D.Double(-30, -100, 60, 200);
+	Shape wall_1 = new Rectangle2D.Double(-scale * 2, -scale * 6, scale * 4, scale * 12);
+	Shape wall_2 = new Rectangle2D.Double(-scale * 2, -scale * 4, scale * 4, scale * 8); //edit
+
 	
 	public MyPanel() {
 		setPreferredSize( new Dimension( panelWidth, panelHeight ) ); 
@@ -63,24 +66,32 @@ class MyPanel extends JPanel{
 		Graphics2D g2 = (Graphics2D) g;
 
 		//player
-		player = new Ellipse2D.Double(-radius, -radius, 2*radius, 2*radius);
-		at.setToTranslation(translationX, translationY);
-		player = at.createTransformedShape(player);
-		g2.setColor(Color.RED);
-		g2.fill(player);
+		player = new Ellipse2D.Double( -scale, -scale, 2 * scale, 2 * scale );
+		at.setToTranslation( translationX, translationY );
+		player = at.createTransformedShape( player );
+		g2.setColor( Color.RED );
+		g2.fill( player );
 		
 		//Star
-		at.setToTranslation(300, 200);
-		star1 = at.createTransformedShape(star1);
-		g2.setColor(Color.YELLOW);
-		g2.fill(star1);
+		at.setToTranslation( panelWidth / 2, panelHeight / 2 );
+		star1 = at.createTransformedShape( star1 );
+		g2.setColor( Color.YELLOW );
+		g2.fill( star1 );
 		
 		
 		//Obstacles
-		at.setToTranslation(100, panelHeight - 100);
-		obs1 = at.createTransformedShape(obs1);
-		g2.setColor(Color.BLUE);
-		g2.fill(obs1);
+		//Wall - 1
+		at.setToTranslation( scale * 6, panelHeight - scale * 6 );
+		wall_1 = at.createTransformedShape( wall_1 );
+		g2.setColor( Color.BLUE );
+		g2.fill( wall_1 );
+		
+		//Wall - 2
+		at.setToTranslation( scale * 2, panelHeight - (panelHeight - scale * 2) );
+		wall_2 = at.createTransformedShape( wall_2 );
+		g2.setColor( Color.BLUE );
+		g2.fill( wall_2 );
+		
 	}
 	
 }
