@@ -2,6 +2,7 @@ package application;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -65,9 +66,13 @@ class MyPanel extends JPanel implements Runnable, KeyListener, MouseListener{
 	//Obstacles
 	Shape wall_1 = null;
 	Shape wall_2 = null;
+	Shape wall_3 = null;
 	
 	//Star 
 	Shape star1 = null;
+	
+	//Goal
+	Font font = new Font("Monospaced", Font.BOLD, 20);
 	
 	//Mouse aux
 	int firstX = 0;
@@ -103,7 +108,9 @@ class MyPanel extends JPanel implements Runnable, KeyListener, MouseListener{
 		g2.setColor( Color.YELLOW );
 		g2.fill( star1 );
 		
-		
+		String goal = "Goal";
+		g2.setFont(font);
+		g2.drawString(goal, panelWidth - 50, panelHeight - scale);
 		//Obstacles
 		//Wall - 1
 		wall_1 = new Rectangle2D.Double(-scale * 2, -scale * 6, scale * 4, scale * 12);
@@ -121,6 +128,14 @@ class MyPanel extends JPanel implements Runnable, KeyListener, MouseListener{
 		//g2.setColor( Color.BLUE );
 		g2.setPaint(new TexturePaint(img, wall_2.getBounds2D()));
 		g2.fill( wall_2 );
+		
+		//Wall - 3
+		wall_3 = new Rectangle2D.Double(-scale * 2, - scale * 9, scale * 4, scale * 18);
+		
+		at.setToTranslation(panelWidth - scale * 6, panelHeight - scale * 9);
+		wall_3 = at.createTransformedShape(wall_3);
+		g2.setColor(Color.BLUE);
+		g2.fill(wall_3);
 				
 		//Player
 		player = new Ellipse2D.Double( -scale, -scale, 2 * scale, 2 * scale );
