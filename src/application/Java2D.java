@@ -45,11 +45,14 @@ class MyPanel extends JPanel implements Runnable, KeyListener, MouseListener{
 	int panelHeight = 400;
 	
 	int scale = 15;
+	int originX = scale * 2;
+	int originY = panelHeight - scale * 2;
 	
 	AffineTransform at = new AffineTransform();
 	
 	//Player - Using ellipse
 	Shape player = null;
+	
 	int translationX = scale * 2;
 	int translationY = panelHeight - scale * 2;
 	int vxPlayer = 0;
@@ -121,7 +124,7 @@ class MyPanel extends JPanel implements Runnable, KeyListener, MouseListener{
 		g2.fill( player );
 	}
 
-	//Runnable
+							//Runnable
 	@Override
 	public void run() {
 		
@@ -129,6 +132,9 @@ class MyPanel extends JPanel implements Runnable, KeyListener, MouseListener{
 			repaint();
 			translationX += vxPlayer;
 			translationY += vyPlayer;
+			
+			collisionWalls();
+
 			
 			try {
 				Thread.sleep(100);
@@ -140,8 +146,7 @@ class MyPanel extends JPanel implements Runnable, KeyListener, MouseListener{
 	}
 	
 	
-	
-	//Teclado - KeyListener
+							//Teclado - KeyListener
 	@Override
 	public void keyTyped(KeyEvent e) {
 	}
@@ -209,5 +214,30 @@ class MyPanel extends JPanel implements Runnable, KeyListener, MouseListener{
 
 	@Override
 	public void mouseExited(MouseEvent e) {
+	}
+	
+												//AUX
+	public void collisionWalls() {
+		if(translationX - scale < 0) { //Colision with left wall
+			
+			translationX = originX;
+			translationY = originY;
+			
+		}else if(translationX + scale > panelWidth) {
+			
+			translationX = originX;
+			translationY = originY;
+			
+		}else if(translationY - scale < 0) {
+			
+			translationX = originX;
+			translationY = originY;
+		
+		}else if(translationY + scale > panelHeight){
+		
+			translationX = originX;
+			translationY = originY;
+		
+		}
 	}
 }
