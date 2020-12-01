@@ -6,17 +6,21 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.Shape;
+import java.awt.TexturePaint;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+
 
 import shapes.Star;
 
@@ -70,9 +74,11 @@ class MyPanel extends JPanel implements Runnable, KeyListener, MouseListener{
 	int firstY = 0;
 	boolean selected = false;
 	
+	BufferedImage img = utils.Utils.readImage(this, "images/Brick_Wall.jpg");
+	
 	public MyPanel() {
 		setPreferredSize( new Dimension( panelWidth, panelHeight ) ); 
-		setBackground(Color.LIGHT_GRAY); 
+		setBackground(Color.DARK_GRAY); 
 		
 		//Key
 		this.addKeyListener(this);
@@ -104,7 +110,7 @@ class MyPanel extends JPanel implements Runnable, KeyListener, MouseListener{
 		
 		at.setToTranslation( scale * 6, panelHeight - scale * 6 );
 		wall_1 = at.createTransformedShape( wall_1 );
-		g2.setColor( Color.BLUE );
+		g2.setPaint(new TexturePaint(img, wall_1.getBounds2D()));
 		g2.fill( wall_1 );
 		
 		//Wall - 2
@@ -112,7 +118,8 @@ class MyPanel extends JPanel implements Runnable, KeyListener, MouseListener{
 		
 		at.setToTranslation( scale * 2, scale * 4);
 		wall_2 = at.createTransformedShape( wall_2 );
-		g2.setColor( Color.BLUE );
+		//g2.setColor( Color.BLUE );
+		g2.setPaint(new TexturePaint(img, wall_2.getBounds2D()));
 		g2.fill( wall_2 );
 				
 		//Player
@@ -217,23 +224,24 @@ class MyPanel extends JPanel implements Runnable, KeyListener, MouseListener{
 	}
 	
 												//AUX
-	public void collisionWalls() {
-		if(translationX - scale < 0) { //Colision with left wall
+	
+	public void collisionWalls() { //colisao com as paredes
+		if(translationX - scale < 0) { //Colisao parede esquerda
 			
 			translationX = originX;
 			translationY = originY;
 			
-		}else if(translationX + scale > panelWidth) {
+		}else if(translationX + scale > panelWidth) { //colisao parede direita
 			
 			translationX = originX;
 			translationY = originY;
 			
-		}else if(translationY - scale < 0) {
+		}else if(translationY - scale < 0) { //colisao parede superior
 			
 			translationX = originX;
 			translationY = originY;
 		
-		}else if(translationY + scale > panelHeight){
+		}else if(translationY + scale > panelHeight){ //colisao parede inferior
 		
 			translationX = originX;
 			translationY = originY;
