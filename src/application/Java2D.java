@@ -8,6 +8,9 @@ import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
@@ -36,7 +39,7 @@ public class Java2D extends JFrame{
 
 }
 
-class MyPanel extends JPanel implements Runnable, KeyListener{
+class MyPanel extends JPanel implements Runnable, KeyListener, MouseListener{
 
 	int panelWidth = 600;
 	int panelHeight = 400;
@@ -59,12 +62,21 @@ class MyPanel extends JPanel implements Runnable, KeyListener{
 	//Star 
 	Shape star1 = null;
 	
+	//Mouse aux
+	int firstX = 0;
+	int firstY = 0;
+	boolean selected = false;
+	
 	public MyPanel() {
 		setPreferredSize( new Dimension( panelWidth, panelHeight ) ); 
 		setBackground(Color.LIGHT_GRAY); 
 		
+		//Key
 		this.addKeyListener(this);
 		this.setFocusable(true);
+		
+		//Mouse
+		this.addMouseListener(this);
 		
 		Thread thread = new Thread(this);
 		thread.start();
@@ -100,7 +112,7 @@ class MyPanel extends JPanel implements Runnable, KeyListener{
 		g2.setColor( Color.BLUE );
 		g2.fill( wall_2 );
 				
-		//player
+		//Player
 		player = new Ellipse2D.Double( -scale, -scale, 2 * scale, 2 * scale );
 		
 		at.setToTranslation( translationX, translationY );
@@ -114,7 +126,6 @@ class MyPanel extends JPanel implements Runnable, KeyListener{
 	public void run() {
 		
 		while(true) {
-			
 			repaint();
 			translationX += vxPlayer;
 			translationY += vyPlayer;
@@ -133,13 +144,10 @@ class MyPanel extends JPanel implements Runnable, KeyListener{
 	//Teclado - KeyListener
 	@Override
 	public void keyTyped(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-
 		int keyCode = e.getKeyCode();
 		
 		switch (keyCode) {
@@ -161,9 +169,8 @@ class MyPanel extends JPanel implements Runnable, KeyListener{
 		case KeyEvent.VK_LEFT:
 			vxPlayer = -5;
 			vyPlayer = 0;
-			break;
-		}
-		
+			break;		
+		}		
 	}
 
 	@Override
@@ -172,4 +179,35 @@ class MyPanel extends JPanel implements Runnable, KeyListener{
 		vyPlayer = 0;
 	}
 
+	
+	//Rato - MouseListener - See if player is selected or not
+	@Override
+	public void mouseClicked(MouseEvent e) {		
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		//Verifica se o jogador está selecionado ou não
+		if(player.contains(e.getX(), e.getY())) {
+			firstX = e.getX();
+			firstY = e.getY();
+			selected = true;
+			//System.out.println("Selected: "+selected);
+		}else {
+			selected = false;
+			//System.out.println("Selected: "+selected);
+		}
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {	
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+	}
 }
