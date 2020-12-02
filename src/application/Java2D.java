@@ -8,24 +8,26 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.TexturePaint;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-
 
 import shapes.Star;
 
-public class Java2D extends JFrame{
+public class Java2D extends JFrame implements ActionListener{
 
 	public static void main(String[] args) {
 		
@@ -41,6 +43,42 @@ public class Java2D extends JFrame{
 		frame.setResizable(false);
 		frame.setVisible(true);
 	}
+	
+	public static final String GAME = "Game";
+	public static final String START = "Start";
+	public static final String EXIT = "Exit";
+	
+	public Java2D() {
+		
+		JMenuBar mb = new JMenuBar();
+		setJMenuBar(mb);
+		
+		JMenu menu = new JMenu("Game");
+		JMenuItem mI = new JMenuItem("Start");
+		
+		mI.addActionListener(this);
+		menu.add(mI);
+		
+		menu.addSeparator();
+		
+		mI = new JMenuItem("Exit");
+		mI.addActionListener(this); 
+		menu.add(mI); 
+		mb.add(menu); 
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		
+		String cmd = e.getActionCommand();
+		
+		if(START.equals(cmd)) {
+			
+		}else if(EXIT.equals(cmd)) {
+			System.exit(0);
+		}
+		
+	}
 
 }
 
@@ -52,6 +90,10 @@ class MyPanel extends JPanel implements Runnable, KeyListener, MouseListener{
 	int scale = 15;
 	int originX = scale * 2;
 	int originY = panelHeight - scale * 2;
+	Color backColor = (Color.DARK_GRAY);
+	boolean win = false;
+//	Font fontWin = new Font("Monospaced", Font.BOLD, 200);
+//	String strWin = "Victory";
 	
 	AffineTransform at = new AffineTransform();
 	
@@ -70,9 +112,12 @@ class MyPanel extends JPanel implements Runnable, KeyListener, MouseListener{
 	
 	//Star 
 	Shape star1 = null;
+	//Stroke stroke = new BasicStroke(20, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
 	
 	//Goal
 	Font font = new Font("Monospaced", Font.BOLD, 20);
+	String goal = "Goal";
+	Shape goalBox = null;
 	
 	//Mouse aux
 	int firstX = 0;
@@ -81,9 +126,9 @@ class MyPanel extends JPanel implements Runnable, KeyListener, MouseListener{
 	
 	BufferedImage img = utils.Utils.readImage(this, "images/Brick_Wall.jpg");
 	
-	public MyPanel() {
+	public MyPanel() {	
 		setPreferredSize( new Dimension( panelWidth, panelHeight ) ); 
-		setBackground(Color.DARK_GRAY); 
+		setBackground(backColor); 
 		
 		//Key
 		this.addKeyListener(this);
@@ -99,18 +144,35 @@ class MyPanel extends JPanel implements Runnable, KeyListener, MouseListener{
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D) g;
+		drawAll(g2);
+	}
+	
+	public void drawAll(Graphics g) {
+		super.paintComponent(g);
+		Graphics2D g2 = (Graphics2D) g;
+		
+		//Goal
+		goalBox = new Rectangle2D.Double(-scale * 2, -scale, scale * 4, scale * 2);
+		at.setToTranslation(panelWidth - scale * 2, panelHeight - scale);
+		goalBox = at.createTransformedShape(goalBox);
+		g2.setColor(backColor);
+		g2.fill(goalBox);
+		
+		g2.setFont(font);
+		g2.setColor(Color.YELLOW);
+		g2.drawString(goal, panelWidth - 50, panelHeight - scale);
+		
 		
 		//Star
 		star1 = new Star( -scale, -scale, scale * 2, scale * 2 );
 		
 		at.setToTranslation( panelWidth / 2, panelHeight / 2 );
 		star1 = at.createTransformedShape( star1 );
+		
 		g2.setColor( Color.YELLOW );
 		g2.fill( star1 );
 		
-		String goal = "Goal";
-		g2.setFont(font);
-		g2.drawString(goal, panelWidth - 50, panelHeight - scale);
+		
 		//Obstacles
 		//Wall - 1
 		wall_1 = new Rectangle2D.Double(-scale * 2, -scale * 6, scale * 4, scale * 12);
@@ -134,7 +196,7 @@ class MyPanel extends JPanel implements Runnable, KeyListener, MouseListener{
 		
 		at.setToTranslation(panelWidth - scale * 6, panelHeight - scale * 9);
 		wall_3 = at.createTransformedShape(wall_3);
-		g2.setColor(Color.BLUE);
+		g2.setPaint(new TexturePaint(img, wall_3.getBounds2D()));
 		g2.fill(wall_3);
 				
 		//Player
@@ -156,15 +218,13 @@ class MyPanel extends JPanel implements Runnable, KeyListener, MouseListener{
 			translationY += vyPlayer;
 			
 			collisionWalls();
-
 			
 			try {
-				Thread.sleep(100);
+				Thread.sleep(50);
 			}catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		}
-		
 	}
 	
 	
@@ -263,4 +323,5 @@ class MyPanel extends JPanel implements Runnable, KeyListener, MouseListener{
 		
 		}
 	}
+	
 }
