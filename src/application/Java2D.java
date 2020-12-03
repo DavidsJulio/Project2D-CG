@@ -35,15 +35,15 @@ public class Java2D extends JFrame implements ActionListener{
 		JMenuBar mb = new JMenuBar();
 		setJMenuBar(mb);
 		
-		JMenu menu = new JMenu("Game");
-		JMenuItem mI = new JMenuItem("Start");
+		JMenu menu = new JMenu(GAME);
+		JMenuItem mI = new JMenuItem(START);
 		
 		mI.addActionListener(this);
 		menu.add(mI);
 		
 		menu.addSeparator();
 		
-		mI = new JMenuItem("Exit");
+		mI = new JMenuItem(EXIT);
 		mI.addActionListener(this); 
 		menu.add(mI); 
 		mb.add(menu); 

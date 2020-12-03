@@ -31,12 +31,13 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 	Color backColor = (Color.DARK_GRAY);
 	boolean win = false;
 	
+	
 	int wS;
 	int hS;
 	
 	
-//	Font fontWin = new Font("Monospaced", Font.BOLD, 200);
-//	String strWin = "Victory";
+	Font fontWin = new Font("Monospaced", Font.BOLD, 50);
+	String strWin = "Victory";
 	
 	AffineTransform at = new AffineTransform();
 	
@@ -68,7 +69,7 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 	boolean selected = false;
 	
 	BufferedImage img = utils.Utils.readImage(this, "images/Brick_Wall.jpg");
-	
+	Thread thread;
 	public MyPanel() {	
 		setPreferredSize( new Dimension( panelWidth, panelHeight ) ); 
 		setBackground(backColor); 
@@ -80,14 +81,24 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 		//Mouse
 		this.addMouseListener(this);
 		
-		Thread thread = new Thread(this);
+		thread = new Thread(this);
 		thread.start();
+		
 	}
 	
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D) g;
+		
 		drawAll(g2);
+		if(winningCondition()){
+			//setBackground(Color.WHITE);
+			g2.setFont(fontWin);
+			g2.setColor(Color.GREEN);
+			g2.drawString(strWin, panelWidth / 3, panelHeight / 2);
+			//cancel();
+		}
+	
 	}
 	
 	public void drawAll(Graphics g) {
@@ -95,16 +106,9 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 		Graphics2D g2 = (Graphics2D) g;
 		
 		//Goal
-		goalBox = new Rectangle2D.Double(-scale * 2, -scale, scale * 4, scale * 2);
-		at.setToTranslation(panelWidth - scale * 2, panelHeight - scale);
-		goalBox = at.createTransformedShape(goalBox);
-		g2.setColor(backColor);
-		g2.fill(goalBox);
-		
 		g2.setFont(font);
 		g2.setColor(Color.YELLOW);
 		g2.drawString(goal, panelWidth - 50, panelHeight - scale);
-		
 		
 		//Star
 		star1 = new Star( -scale, -scale, scale * 2, scale * 2 );
@@ -163,7 +167,7 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 	@Override
 	public void run() {
 		
-		while(true) {
+		while(!win) {
 			repaint();
 			translationX += vxPlayer;
 			translationY += vyPlayer;
@@ -274,5 +278,14 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 		
 		}
 	}
+	
+	public boolean winningCondition() {
+		if(player.intersects(panelWidth - scale *2, panelHeight - scale * 2, 50, 50)){
+			win = true;
+			return win;
+		}
+		return win;
+	}
+	
 	
 }
