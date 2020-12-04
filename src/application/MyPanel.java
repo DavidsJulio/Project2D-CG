@@ -121,7 +121,8 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 		
 		
 		
-		g2.setColor(Color.BLACK);
+//		g2.setColor(Color.BLACK);
+		g2.setPaint(new TexturePaint(img, new Rectangle2D.Double(0, 0, panelWidth, panelHeight)));
 		
 		//Obstacles
 		//Wall - 1
@@ -166,7 +167,7 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 		wall_5 = at.createTransformedShape(wall_5);
 //		wS = wall_5.getBounds().width;
 //		hS = wall_5.getBounds().height;
-//		g2.setPaint(new TexturePaint(img, new Rectangle2D.Double(0, 0, wS, hS)));
+//		g2.setPaint(new TexturePaint(img, wall_5.getBounds2D()));
 		g2.fill(wall_5);
 		
 		
@@ -176,13 +177,14 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 		wall_6 = at.createTransformedShape(wall_6);
 //		wS = wall_6.getBounds().width;
 //		hS = wall_6.getBounds().height;
-//		g2.setPaint(new TexturePaint(img, new Rectangle2D.Double(0, 0, wS, hS)));
+//		g2.setPaint(new TexturePaint(img, wall_6.getBounds2D()));
 		g2.fill(wall_6);
 		
 		//Wall - 7
 		wall_7 = new Rectangle2D.Double(-scale * 4, -scale * 2, scale * 8, scale * 4);
 		at.setToTranslation(panelWidth - scale * 4, scale * 2);
 		wall_7 = at.createTransformedShape(wall_7);
+//		g2.setPaint(new TexturePaint(img, wall_7.getBounds2D()));
 		g2.fill(wall_7);
 		
 		
@@ -190,6 +192,7 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 		plus = new Plus(-scale * 6, -scale * 6, scale * 12, scale * 12);
 		at.setToTranslation(panelWidth / 3 + scale, panelHeight / 3);
 		plus = at.createTransformedShape(plus);
+//		g2.setPaint(new TexturePaint(img, plus.getBounds2D()));
 		g2.fill(plus);
 		
 		//Player
