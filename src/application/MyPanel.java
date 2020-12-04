@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Paint;
 import java.awt.Shape;
 import java.awt.TexturePaint;
 import java.awt.event.KeyEvent;
@@ -14,10 +15,12 @@ import java.awt.event.MouseListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
+import java.awt.geom.Rectangle2D.Double;
 import java.awt.image.BufferedImage;
 
 import javax.swing.JPanel;
 
+import shapes.Plus;
 import shapes.Star;
 
 public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListener{
@@ -34,8 +37,6 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 	
 	int wS;
 	int hS;
-	
-	
 	Font fontWin = new Font("Monospaced", Font.BOLD, 50);
 	String strWin = "Victory";
 	
@@ -53,6 +54,12 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 	Shape wall_1 = null;
 	Shape wall_2 = null;
 	Shape wall_3 = null;
+	Shape wall_4 = null;
+	Shape wall_5 = null;
+	Shape wall_6 = null;
+	Shape wall_7 = null;
+	Shape plus = null;
+	
 	
 	//Star 
 	Shape star1 = null;
@@ -69,7 +76,10 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 	boolean selected = false;
 	
 	BufferedImage img = utils.Utils.readImage(this, "images/Brick_Wall.jpg");
+	
+	
 	Thread thread;
+	
 	public MyPanel() {	
 		setPreferredSize( new Dimension( panelWidth, panelHeight ) ); 
 		setBackground(backColor); 
@@ -82,8 +92,7 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 		this.addMouseListener(this);
 		
 		thread = new Thread(this);
-		thread.start();
-		
+		thread.start();	
 	}
 	
 	public void paintComponent(Graphics g) {
@@ -110,57 +119,92 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 		g2.setColor(Color.YELLOW);
 		g2.drawString(goal, panelWidth - 50, panelHeight - scale);
 		
-		//Star
-		star1 = new Star( -scale, -scale, scale * 2, scale * 2 );
 		
-		at.setToTranslation( panelWidth / 2, panelHeight / 2 );
-		star1 = at.createTransformedShape( star1 );
 		
-		g2.setColor( Color.YELLOW );
-		g2.fill( star1 );
-		
+		g2.setColor(Color.BLACK);
 		
 		//Obstacles
 		//Wall - 1
 		wall_1 = new Rectangle2D.Double(-scale * 2, -scale * 6, scale * 4, scale * 12);
-		
 		at.setToTranslation( scale * 6, panelHeight - scale * 6 );
 		wall_1 = at.createTransformedShape( wall_1 );
-
-		wS = wall_1.getBounds().width;
-		hS = wall_1.getBounds().height;
-		g2.setPaint(new TexturePaint(img, new Rectangle2D.Double(0,0,wS,hS) ));
+//		wS = wall_1.getBounds().width;
+//		hS = wall_1.getBounds().height;
+//		g2.setPaint(new TexturePaint(img, new Rectangle2D.Double(0,0,wS,hS) ));
 		g2.fill( wall_1 );
 		
 		//Wall - 2
 		wall_2 = new Rectangle2D.Double(-scale * 2, -scale * 4, scale * 4, scale * 8); //edit
-
 		at.setToTranslation( scale * 2, scale * 4);
-		wall_2 = at.createTransformedShape( wall_2 );
-		
-		wS = wall_2.getBounds().width;
-		hS = wall_2.getBounds().height;
-		g2.setPaint(new TexturePaint(img, new Rectangle2D.Double(0, 0, wS, hS)));
+		wall_2 = at.createTransformedShape( wall_2 );	
+//		wS = wall_2.getBounds().width;
+//		hS = wall_2.getBounds().height;
+//		g2.setPaint(new TexturePaint(img, new Rectangle2D.Double(0, 0, wS, hS)));
 		g2.fill( wall_2 );
 		
 		//Wall - 3
-		wall_3 = new Rectangle2D.Double(-scale * 2, - scale * 9, scale * 4, scale * 18);
-		
+		wall_3 = new Rectangle2D.Double(-scale * 2, - scale * 9, scale * 4, scale * 18);	
 		at.setToTranslation(panelWidth - scale * 6, panelHeight - scale * 9);
-		wall_3 = at.createTransformedShape(wall_3);
-		
-		int wS = wall_3.getBounds().width;
-		int hS = wall_3.getBounds().height;
-		g2.setPaint(new TexturePaint(img, new Rectangle2D.Double(0, 0, wS, hS)));
+		wall_3 = at.createTransformedShape(wall_3);		
+//		wS = wall_3.getBounds().width;
+//		hS = wall_3.getBounds().height;
+//		g2.setPaint(new TexturePaint(img, new Rectangle2D.Double(0, 0, wS, hS)));
 		g2.fill(wall_3);
 				
+		//Wall - 4
+		wall_4 = new Rectangle2D.Double(- scale * 2, -scale * 4, scale * 4, scale * 8);
+		at.setToTranslation(scale * 14, panelHeight - scale * 4);
+		wall_4 = at.createTransformedShape(wall_4);
+//		wS = wall_4.getBounds().width;
+//		hS = wall_4.getBounds().height;
+//		g2.setPaint(new TexturePaint(img, new Rectangle2D.Double(0, 0, wS, hS)));
+		g2.fill(wall_4);
+		
+		//Wall - 5 
+		wall_5 = new Rectangle2D.Double(- scale * 2, -scale * 9, scale * 4, scale * 18);
+		at.setToTranslation(panelWidth - scale * 14, panelHeight - scale * 12);
+		wall_5 = at.createTransformedShape(wall_5);
+//		wS = wall_5.getBounds().width;
+//		hS = wall_5.getBounds().height;
+//		g2.setPaint(new TexturePaint(img, new Rectangle2D.Double(0, 0, wS, hS)));
+		g2.fill(wall_5);
+		
+		
+		//Wall - 6
+		wall_6 = new Rectangle2D.Double(- scale * 4, -scale * 3, scale * 6, scale * 4);
+		at.setToTranslation(panelWidth - scale * 9, panelHeight - scale * 12);
+		wall_6 = at.createTransformedShape(wall_6);
+//		wS = wall_6.getBounds().width;
+//		hS = wall_6.getBounds().height;
+//		g2.setPaint(new TexturePaint(img, new Rectangle2D.Double(0, 0, wS, hS)));
+		g2.fill(wall_6);
+		
+		//Wall - 7
+		wall_7 = new Rectangle2D.Double(-scale * 4, -scale * 2, scale * 8, scale * 4);
+		at.setToTranslation(panelWidth - scale * 4, scale * 2);
+		wall_7 = at.createTransformedShape(wall_7);
+		g2.fill(wall_7);
+		
+		
+		//Plus
+		plus = new Plus(-scale * 6, -scale * 6, scale * 12, scale * 12);
+		at.setToTranslation(panelWidth / 3 + scale, panelHeight / 3);
+		plus = at.createTransformedShape(plus);
+		g2.fill(plus);
+		
 		//Player
 		player = new Ellipse2D.Double( -scale, -scale, 2 * scale, 2 * scale );
-		
 		at.setToTranslation( translationX, translationY );
 		player = at.createTransformedShape( player );
 		g2.setColor( Color.RED );
 		g2.fill( player );
+		
+		//Star
+		star1 = new Star( -scale, -scale, scale * 2, scale * 2 );	
+		at.setToTranslation( panelWidth - scale * 10, panelHeight - scale * 9 );
+		star1 = at.createTransformedShape( star1 );
+		g2.setColor( Color.YELLOW );
+		g2.fill( star1 );
 	}
 
 							//Runnable
@@ -256,26 +300,19 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 												//AUX
 	
 	public void collisionWalls() { //colisao com as paredes
-		if(translationX - scale < 0) { //Colisao parede esquerda
-			
+		if(translationX - scale < 0) { //Colisao parede esquerda			
 			translationX = originX;
-			translationY = originY;
-			
-		}else if(translationX + scale > panelWidth) { //colisao parede direita
-			
+			translationY = originY;			
+		}else if(translationX + scale > panelWidth) { //colisao parede direita			
 			translationX = originX;
-			translationY = originY;
-			
-		}else if(translationY - scale < 0) { //colisao parede superior
-			
+			translationY = originY;			
+		}else if(translationY - scale < 0) { //colisao parede superior			
 			translationX = originX;
-			translationY = originY;
-		
+			translationY = originY;		
 		}else if(translationY + scale > panelHeight){ //colisao parede inferior
 		
 			translationX = originX;
-			translationY = originY;
-		
+			translationY = originY;	
 		}
 	}
 	
