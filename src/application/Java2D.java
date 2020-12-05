@@ -2,6 +2,7 @@ package application;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.print.PrinterJob;
 
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -29,6 +30,7 @@ public class Java2D extends JFrame implements ActionListener{
 	public static final String GAME = "Game";
 	public static final String START = "Start";
 	public static final String EXIT = "Exit";
+	PrinterJob pj;
 	
 	public Java2D() {
 		
@@ -54,9 +56,9 @@ public class Java2D extends JFrame implements ActionListener{
 		String cmd = e.getActionCommand();
 		
 		if(START.equals(cmd)) {
-			
+			//MyPanel.STOP = false;
 		}else if(EXIT.equals(cmd)) {
-			System.exit(0);
+			
 		}		
 	}
 }
