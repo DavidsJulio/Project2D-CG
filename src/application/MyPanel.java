@@ -38,6 +38,7 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 	boolean collision = false;
 	public static boolean STOP = false;
 	boolean bonus = false;
+	boolean transparency = false;
 	
 
 	Font fontWin = new Font("Monospaced", Font.BOLD, 50);
@@ -107,13 +108,14 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 		Graphics2D g2 = (Graphics2D) g;
 		
 		drawAll(g2);
-		if(winningCondition()){
-			//setBackground(Color.WHITE);
+		AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f); 
+		g2.setComposite(ac);
 		
+		if(winningCondition()){
 			g2.setFont(fontWin);
 			g2.setColor(Color.GREEN);
 			g2.drawString(strWin, panelWidth / 3, panelHeight / 2);
-			//cancel();
+			
 		}
 		
 		if(collision) {
@@ -121,8 +123,6 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 			g2.setColor(Color.RED);
 			g2.drawString("Game Over", panelWidth / 4, panelHeight / 2);
 		}
-		
-
 	}
 	
 	public void drawAll(Graphics g) {
@@ -215,6 +215,7 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 		if(bonus) {
 			AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.4f); 
 			g2.setComposite(ac);
+			transparency = true;
 		}
 		
 		g2.setPaint(new TexturePaint(img, new Rectangle2D.Double(0, 0, panelWidth, panelHeight)));
@@ -228,9 +229,7 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 		
 		while(!STOP) {
 			repaint();
-			
-
-			
+		
 			translationX += vxPlayer;
 			translationY += vyPlayer;
 			
@@ -239,12 +238,8 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 				bonusStar();
 			}
 			
-			
-//			if(wall_1 != null) {
-				collisionWalls();
-//			}
-			
-			
+			collisionWalls();
+		
 			try {
 				Thread.sleep(50);
 			}catch (InterruptedException e) {
@@ -329,7 +324,7 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 												//MouseMotion
 	@Override
 	public void mouseDragged(MouseEvent e) {
-//		if(selected) {
+		if(selected) {
 		
 			vxPlayer = e.getX() - firstX;
 			System.out.print(vxPlayer);
@@ -341,7 +336,7 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 			firstX += vxPlayer;
 			firstY += vyPlayer;
 			repaint();
-//		}
+		}
 	}
 
 	@Override
@@ -393,12 +388,12 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 			}
 		}
 		
-//		if(wall_3 != null) {
-//			if(player.intersects(wall_3.getBounds())) {
-//				collision = true;
-//				STOP = true;
-//			}
-//		}
+		if(wall_3 != null) {
+			if(player.intersects(wall_3.getBounds()) && !transparency) {
+				collision = true;
+				STOP = true;
+			}
+		}
 		
 		if(wall_4 != null) {
 			if(player.intersects(wall_4.getBounds())) {
@@ -445,7 +440,5 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 		return false;
 	}
 
-	
-	
-	
+
 }
