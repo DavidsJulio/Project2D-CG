@@ -191,13 +191,15 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 		move1 = at.createTransformedShape(move1);
 		g2.fill(move1);
 	
-		
+	if(!bonus) {	
 		//Star
 		star1 = new Star( -scale, -scale, scale * 2, scale * 2 );	
 		at.setToTranslation( panelWidth - scale * 10, panelHeight - scale * 9 );
 		star1 = at.createTransformedShape( star1 );
 		g2.setColor( Color.YELLOW );
 		g2.fill( star1 );
+	}
+		
 		
 		//Player
 		player = new Ellipse2D.Double( -scale, -scale, 2 * scale, 2 * scale );
