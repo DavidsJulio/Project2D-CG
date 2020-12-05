@@ -62,6 +62,10 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 	Shape wall_6 = null;
 	Shape wall_7 = null;
 	Shape plus = null;
+	//Moving obstacles
+	Shape move1 = null;
+	int tx = panelWidth - scale*2;
+	int ty = panelHeight - scale * 4;
 	
 	
 	//Star 
@@ -177,13 +181,20 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 		plus = at.createTransformedShape(plus);
 		g2.fill(plus);
 		
+		
+		g2.setColor(Color.GREEN);
+		//Move - 1
+		move1 = new Rectangle2D.Double(-20, -5, 40, 10);
+		//at.setToTranslation(panelWidth - scale*2, panelHeight - scale * 4);
+		at.setToTranslation(tx, ty);
+		move1 = at.createTransformedShape(move1);
+		g2.fill(move1);
 	
 		
 		//Star
 		star1 = new Star( -scale, -scale, scale * 2, scale * 2 );	
 		at.setToTranslation( panelWidth - scale * 10, panelHeight - scale * 9 );
 		star1 = at.createTransformedShape( star1 );
-
 		g2.setColor( Color.YELLOW );
 		g2.fill( star1 );
 		
@@ -216,6 +227,12 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 		
 		while(!STOP) {
 			repaint();
+			
+
+			tx = tx - 5;
+		
+			
+			
 			translationX += vxPlayer;
 			translationY += vyPlayer;
 			
@@ -268,6 +285,7 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 			vxPlayer = -5;
 			vyPlayer = 0;
 			break;		
+
 		}		
 	}
 

@@ -29,8 +29,7 @@ public class Java2D extends JFrame implements ActionListener{
 	
 	public static final String GAME = "Game";
 	public static final String START = "Start";
-	public static final String EXIT = "Exit";
-	PrinterJob pj;
+	public static final String EXIT = "Exit";;
 	
 	public Java2D() {
 		
