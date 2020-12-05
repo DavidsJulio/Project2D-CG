@@ -25,7 +25,7 @@ import javax.swing.JPanel;
 import shapes.Plus;
 import shapes.Star;
 
-public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListener{
+public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListener, MouseMotionListener{
 
 	int panelWidth = 600;
 	int panelHeight = 400;
@@ -187,6 +187,7 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 		move1 = new Rectangle2D.Double(-20, -5, 40, 10);
 		//at.setToTranslation(panelWidth - scale*2, panelHeight - scale * 4);
 		at.setToTranslation(tx, ty);
+
 		move1 = at.createTransformedShape(move1);
 		g2.fill(move1);
 	
@@ -229,9 +230,6 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 			repaint();
 			
 
-			tx = tx - 5;
-		
-			
 			
 			translationX += vxPlayer;
 			translationY += vyPlayer;
@@ -243,7 +241,7 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 			
 			
 //			if(wall_1 != null) {
-//				collisionWalls();
+				collisionWalls();
 //			}
 			
 			
@@ -287,6 +285,7 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 			break;		
 
 		}		
+		
 	}
 
 	@Override
@@ -328,27 +327,29 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 	}
 	
 												//MouseMotion
-//	@Override
-//	public void mouseDragged(MouseEvent e) {
+	@Override
+	public void mouseDragged(MouseEvent e) {
 //		if(selected) {
-//			vxPlayer = e.getX() - firstX;
-//			vyPlayer = e.getY() - firstY;
-//			
-//			at.setToTranslation(vxPlayer, vyPlayer);
-//			player = at.createTransformedShape(player);
-//			firstX += vxPlayer;
-//			firstY += vyPlayer;
-//			repaint();
+		
+			vxPlayer = e.getX() - firstX;
+			System.out.print(vxPlayer);
+			vyPlayer = e.getY() - firstY;
+			System.out.print(vyPlayer);
+			
+			at.setToTranslation(vxPlayer, vyPlayer);
+			player = at.createTransformedShape(player);
+			firstX += vxPlayer;
+			firstY += vyPlayer;
+			repaint();
 //		}
-//	}
-//
-//	@Override
-//	public void mouseMoved(MouseEvent e) {
-//		// TODO Auto-generated method stub
-//		
-//	}
-//	
-//												//AUX
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+												//AUX
 	
 	public void collisionBorders() { //colisao com as paredes
 		if(translationX - scale < 0) { //Colisao parede esquerda			
@@ -377,13 +378,57 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 	}
 	
 	public void collisionWalls() {
-		//if(player.contains())
-
-		if(wall_1.contains(translationX + 15, translationY + 15) || wall_1.contains(translationX - 15, translationY - 15)) {
-			collision = true;
-			STOP = true;
+	
+		if(wall_1 != null) {
+			if(player.intersects(wall_1.getBounds())) {
+				collision = true;
+				STOP = true;
+			}
 		}
 		
+		if(wall_2 != null) {
+			if(player.intersects(wall_2.getBounds())) {
+				collision = true;
+				STOP = true;
+			}
+		}
+		
+//		if(wall_3 != null) {
+//			if(player.intersects(wall_3.getBounds())) {
+//				collision = true;
+//				STOP = true;
+//			}
+//		}
+		
+		if(wall_4 != null) {
+			if(player.intersects(wall_4.getBounds())) {
+				collision = true;
+				STOP = true;
+			}
+		}
+		
+		if(wall_5 != null) {
+			if(player.intersects(wall_5.getBounds())) {
+				collision = true;
+				STOP = true;
+			}
+		}
+		
+		if(wall_6 != null) {
+			if(player.intersects(wall_6.getBounds())) {
+				collision = true;
+				STOP = true;
+			}
+		}
+		
+		if(wall_7 != null) {
+			if(player.intersects(wall_7.getBounds())) {
+				collision = true;
+				STOP = true;
+			}
+		}
+		
+	
 	}
 	
 	public void bonusStar() {
