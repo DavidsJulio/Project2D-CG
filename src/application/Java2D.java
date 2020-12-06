@@ -26,6 +26,7 @@ public class Java2D extends JFrame implements ActionListener{
 		frame.setLocationRelativeTo(null);
 		frame.setResizable(false);
 		frame.setVisible(true);
+	
 	}
 	
 	public static final String GAME = "Game";
@@ -34,10 +35,9 @@ public class Java2D extends JFrame implements ActionListener{
 	public static final String EXIT = "Exit";
 	
 	PrinterJob pj;
-	MyPanel printer;
+	MyPanel panel2;
 	
 	public Java2D() {
-		
 		JMenuBar mb = new JMenuBar();
 		setJMenuBar(mb);
 		
@@ -60,10 +60,11 @@ public class Java2D extends JFrame implements ActionListener{
 		mb.add(menu); 
 		
 		
-		printer = new MyPanel();
+		//Printer
+		panel2 = new MyPanel();
 		
 		pj = PrinterJob.getPrinterJob();
-		pj.setPrintable(printer);
+		pj.setPrintable(panel2);
 	}
 
 	@Override
@@ -72,8 +73,10 @@ public class Java2D extends JFrame implements ActionListener{
 		
 		switch (cmd) {
 		case START:
-			MyPanel.STOP = false;
-			System.out.print(MyPanel.STOP);
+//			MyPanel.RESET = true;
+//			System.out.print(MyPanel.RESET);
+//			printer.reset();
+			
 			break;
 		
 		case PRINT:
@@ -90,13 +93,6 @@ public class Java2D extends JFrame implements ActionListener{
 			break;
 
 		}
-//		if(START.equals(cmd)) {
-//			//MyPanel.STOP = false;
-//		}else if()
-//		
-//		}else if(EXIT.equals(cmd)) {
-//			
-//		}		
 	}
 }
 

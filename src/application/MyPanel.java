@@ -37,15 +37,21 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 	int originX = scale * 2;
 	int originY = panelHeight - scale * 2;
 	Color backColor = (Color.DARK_GRAY);
+	BufferedImage img = utils.Utils.readImage(this, "images/Brick_Wall.jpg");
+
 	boolean win = false;
 	boolean collision = false;
 	public static boolean STOP = false;
 	boolean bonus = false;
 	boolean transparency = false;
+	//reset
+//	protected static boolean RESET = false;
+//	boolean RESET = false;
 	
 
-	Font fontWin = new Font("Monospaced", Font.BOLD, 50);
+	Font fontCondition = new Font("Monospaced", Font.BOLD, 50);
 	String strWin = "Victory";
+	String strGameOver = "Game Over";
 	
 	AffineTransform at = new AffineTransform();
 	
@@ -82,13 +88,7 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 	Shape goalBox = null;
 	
 	//Mouse aux
-	int firstX = 0;
-	int firstY = 0;
-	int deltaX = 0;
-	int deltaY = 0;
 	boolean selected = false;
-	
-	BufferedImage img = utils.Utils.readImage(this, "images/Brick_Wall.jpg");
 	
 	
 	Thread thread;
@@ -106,7 +106,7 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 		this.addMouseMotionListener(this);
 		
 		thread = new Thread(this);
-		thread.start();	
+		thread.start();		
 	}
 	
 	public void paintComponent(Graphics g) {
@@ -118,19 +118,20 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 		g2.setComposite(ac);
 		
 		if(winningCondition()){
-			g2.setFont(fontWin);
+			g2.setFont(fontCondition);
 			g2.setColor(Color.GREEN);
 			g2.drawString(strWin, panelWidth / 3, panelHeight / 2);
-			
-			
 		}
 		
 		if(collision) {
-			g2.setFont(fontWin);
+			g2.setFont(fontCondition);
 			g2.setColor(Color.RED);
-			g2.drawString("Game Over", panelWidth / 4, panelHeight / 2);
-			//System.out.print(STOP);
+			g2.drawString(strGameOver, panelWidth / 4, panelHeight / 2);
 		}
+		
+//		if(RESET) {
+//			reset();
+//		}
 	}
 	
 	public void drawAll(Graphics g) {
@@ -169,26 +170,22 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 		wall_5 = at.createTransformedShape(wall_5);
 		g2.fill(wall_5);
 		
-		
 		//Wall - 6
 		wall_6 = new Rectangle2D.Double(- scale * 4, -scale * 3, scale * 6, scale * 4);
 		at.setToTranslation(panelWidth - scale * 9, panelHeight - scale * 12);
 		wall_6 = at.createTransformedShape(wall_6);
 		g2.fill(wall_6);
 		
-		
 		//Wall - 7
 		wall_7 = new Rectangle2D.Double(-scale * 4, -scale * 2, scale * 8, scale * 4);
 		at.setToTranslation(panelWidth - scale * 4, scale * 2);
 		wall_7 = at.createTransformedShape(wall_7);
 		g2.fill(wall_7);
-			
 		
 		//Plus
 		plus = new Plus(-scale * 6, -scale * 6, scale * 12, scale * 12);
 		at.setToTranslation(panelWidth / 3 + scale, panelHeight / 3);
 		plus = at.createTransformedShape(plus);
-		
 		g2.fill(plus);
 		
 		
@@ -214,7 +211,6 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 		player = new Ellipse2D.Double( -scale, -scale, 2 * scale, 2 * scale );
 		at.setToTranslation( translationX, translationY );
 		player = at.createTransformedShape( player );
-		
 		g2.setColor( Color.RED );
 		g2.fill( player );
 		
@@ -237,7 +233,6 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 							//Runnable
 	@Override
 	public void run() {
-	
 		
 		while(!STOP) {
 			repaint();
@@ -292,9 +287,6 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 			vyPlayer = 0;
 			break;		
 		}		
-		
-		
-		
 	}
 
 	@Override
@@ -303,15 +295,14 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 		vyPlayer = 0;
 	}
 
-	
-	//Rato - MouseListener - See if player is selected or not
+	//Rato - MouseListener - 
 	@Override
 	public void mouseClicked(MouseEvent e) {		
 	}
 
+	//See if player is selected or not
 	@Override
 	public void mousePressed(MouseEvent e) {
-		//Verifica se o jogador está selecionado ou não
 		if( player.contains( e.getX(), e.getY() ) ) {
 			translationX = e.getX();
 			translationY = e.getY();
@@ -336,7 +327,6 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 												//MouseMotion
 	@Override
 	public void mouseDragged(MouseEvent e) {
-
 		if(selected) {
 			vxPlayer = e.getX() - translationX;
 			vyPlayer = e.getY() - translationY;
@@ -347,25 +337,19 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 			translationX += vxPlayer;
 			translationY += vyPlayer;
 			
-			
 			if(!collision && !STOP) {
 				collisionBorders();
 				collisionWalls();
 				repaint();
-				//limpar o lixo, para que a bola não continue a andar
-				vyPlayer = 0;
-				vxPlayer = 0;
 			}
-			
-			
-			
+			//limpar o lixo, para que a bola não continue a andar
+			vyPlayer = 0;
+			vxPlayer = 0;	
 		}
 	}
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
 	}
 												//AUX
 	
@@ -463,6 +447,17 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 		return false;
 	}
 
+	
+//	public void reset() {
+//		if(collision || winningCondition() || STOP) {
+//			translationX = originX;
+//			translationY = originY;
+//			collision = false;
+//			STOP = false;
+//			win = false;
+//		}
+//	}
+		
 	@Override
 	public int print(Graphics graphics, PageFormat pageFormat, int pageIndex) throws PrinterException {
 		
@@ -480,6 +475,5 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 		}
 		return PAGE_EXISTS;		
 	}
-
 
 }
