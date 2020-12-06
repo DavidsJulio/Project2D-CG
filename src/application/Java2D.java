@@ -72,7 +72,8 @@ public class Java2D extends JFrame implements ActionListener{
 		
 		switch (cmd) {
 		case START:
-			
+			MyPanel.STOP = false;
+			System.out.print(MyPanel.STOP);
 			break;
 		
 		case PRINT:

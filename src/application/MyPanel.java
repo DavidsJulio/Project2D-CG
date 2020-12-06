@@ -8,6 +8,7 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Shape;
+import java.awt.Stroke;
 import java.awt.TexturePaint;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -16,7 +17,6 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
-import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.awt.print.PageFormat;
@@ -84,6 +84,8 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 	//Mouse aux
 	int firstX = 0;
 	int firstY = 0;
+	int deltaX = 0;
+	int deltaY = 0;
 	boolean selected = false;
 	
 	BufferedImage img = utils.Utils.readImage(this, "images/Brick_Wall.jpg");
@@ -101,6 +103,7 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 		
 		//Mouse
 		this.addMouseListener(this);
+		this.addMouseMotionListener(this);
 		
 		thread = new Thread(this);
 		thread.start();	
@@ -119,12 +122,14 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 			g2.setColor(Color.GREEN);
 			g2.drawString(strWin, panelWidth / 3, panelHeight / 2);
 			
+			
 		}
 		
 		if(collision) {
 			g2.setFont(fontWin);
 			g2.setColor(Color.RED);
 			g2.drawString("Game Over", panelWidth / 4, panelHeight / 2);
+			//System.out.print(STOP);
 		}
 	}
 	
@@ -171,6 +176,7 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 		wall_6 = at.createTransformedShape(wall_6);
 		g2.fill(wall_6);
 		
+		
 		//Wall - 7
 		wall_7 = new Rectangle2D.Double(-scale * 4, -scale * 2, scale * 8, scale * 4);
 		at.setToTranslation(panelWidth - scale * 4, scale * 2);
@@ -182,6 +188,7 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 		plus = new Plus(-scale * 6, -scale * 6, scale * 12, scale * 12);
 		at.setToTranslation(panelWidth / 3 + scale, panelHeight / 3);
 		plus = at.createTransformedShape(plus);
+		
 		g2.fill(plus);
 		
 		
@@ -230,6 +237,7 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 							//Runnable
 	@Override
 	public void run() {
+	
 		
 		while(!STOP) {
 			repaint();
@@ -250,6 +258,7 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 				e.printStackTrace();
 			}
 		}
+		
 	}
 	
 	
@@ -282,8 +291,9 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 			vxPlayer = -5;
 			vyPlayer = 0;
 			break;		
-
 		}		
+		
+		
 		
 	}
 
@@ -302,14 +312,12 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 	@Override
 	public void mousePressed(MouseEvent e) {
 		//Verifica se o jogador está selecionado ou não
-		if(player.contains(e.getX(), e.getY())) {
-			firstX = e.getX();
-			firstY = e.getY();
+		if( player.contains( e.getX(), e.getY() ) ) {
+			translationX = e.getX();
+			translationY = e.getY();
 			selected = true;
-			System.out.println("Selected: "+selected);
 		}else {
 			selected = false;
-			System.out.println("Selected: "+selected);
 		}
 	}
 
@@ -328,18 +336,29 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 												//MouseMotion
 	@Override
 	public void mouseDragged(MouseEvent e) {
+
 		if(selected) {
+			vxPlayer = e.getX() - translationX;
+			vyPlayer = e.getY() - translationY;
 		
-			vxPlayer = e.getX() - firstX;
-			System.out.print(vxPlayer);
-			vyPlayer = e.getY() - firstY;
-			System.out.print(vyPlayer);
-			
 			at.setToTranslation(vxPlayer, vyPlayer);
 			player = at.createTransformedShape(player);
-			firstX += vxPlayer;
-			firstY += vyPlayer;
-			repaint();
+			
+			translationX += vxPlayer;
+			translationY += vyPlayer;
+			
+			
+			if(!collision && !STOP) {
+				collisionBorders();
+				collisionWalls();
+				repaint();
+				//limpar o lixo, para que a bola não continue a andar
+				vyPlayer = 0;
+				vxPlayer = 0;
+			}
+			
+			
+			
 		}
 	}
 
@@ -452,7 +471,7 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 			drawAll(graphics);
 			break;
 		case 1:
-			graphics.translate(-(int)pageFormat.getWidth(), 0);
+			graphics.translate(-(int)pageFormat.getImageableWidth(), 0);
 			drawAll(graphics);
 			break;
 			
