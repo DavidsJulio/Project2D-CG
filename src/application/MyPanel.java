@@ -430,11 +430,18 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 			}
 		}
 		
-	
+		if(plus != null) {
+			if(plus.contains(player.getBounds().getCenterX()+scale, player.getBounds().getCenterY()+scale) ||
+					plus.contains(player.getBounds().getCenterX()-scale, player.getBounds().getCenterY()-scale)) {
+				collision = true;
+				STOP = true;
+			}
+		}
+		
 	}
 	
 	public void bonusStar() {
-		if(star1.contains(translationX, translationY - scale ))
+		if(star1.contains(player.getBounds().getCenterX(), player.getBounds().getCenterY() - scale))
 			bonus = true;
 	}
 	
