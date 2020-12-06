@@ -19,13 +19,16 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.awt.print.PageFormat;
+import java.awt.print.Printable;
+import java.awt.print.PrinterException;
 
 import javax.swing.JPanel;
 
 import shapes.Plus;
 import shapes.Star;
 
-public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListener, MouseMotionListener{
+public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListener, MouseMotionListener, Printable{
 
 	int panelWidth = 600;
 	int panelHeight = 400;
@@ -128,7 +131,7 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 	public void drawAll(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D) g;
-		
+	
 		//Goal
 		g2.setFont(font);
 		g2.setColor(Color.YELLOW);
@@ -182,23 +185,22 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 		g2.fill(plus);
 		
 		
-		g2.setColor(Color.GREEN);
-		//Move - 1
-		move1 = new Rectangle2D.Double(-20, -5, 40, 10);
-		//at.setToTranslation(panelWidth - scale*2, panelHeight - scale * 4);
-		at.setToTranslation(tx, ty);
-
-		move1 = at.createTransformedShape(move1);
-		g2.fill(move1);
+//		g2.setColor(Color.GREEN);
+//		//Move - 1
+//		move1 = new Rectangle2D.Double(-20, -5, 40, 10);
+//		//at.setToTranslation(panelWidth - scale*2, panelHeight - scale * 4);
+//		at.setToTranslation(tx, ty);
+//		move1 = at.createTransformedShape(move1);
+//		g2.fill(move1);
 	
-	if(!bonus) {	
-		//Star
-		star1 = new Star( -scale, -scale, scale * 2, scale * 2 );	
-		at.setToTranslation( panelWidth - scale * 10, panelHeight - scale * 9 );
-		star1 = at.createTransformedShape( star1 );
-		g2.setColor( Color.YELLOW );
-		g2.fill( star1 );
-	}
+		if(!bonus) {	
+			//Star
+			star1 = new Star( -scale, -scale, scale * 2, scale * 2 );	
+			at.setToTranslation( panelWidth - scale * 10, panelHeight - scale * 9 );
+			star1 = at.createTransformedShape( star1 );
+			g2.setColor( Color.YELLOW );
+			g2.fill( star1 );
+		}
 		
 		
 		//Player
@@ -440,6 +442,24 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 			return win;
 		}
 		return false;
+	}
+
+	@Override
+	public int print(Graphics graphics, PageFormat pageFormat, int pageIndex) throws PrinterException {
+		
+		switch (pageIndex) {
+		case 0:
+			drawAll(graphics);
+			break;
+		case 1:
+			graphics.translate(-(int)pageFormat.getWidth(), 0);
+			drawAll(graphics);
+			break;
+			
+		default:
+			return NO_SUCH_PAGE;
+		}
+		return PAGE_EXISTS;		
 	}
 
 
