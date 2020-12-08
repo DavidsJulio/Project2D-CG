@@ -34,6 +34,14 @@ public class Java2D extends JFrame implements ActionListener{
 	public static final String PRINT = "Print";
 	public static final String EXIT = "Exit";
 	
+	public static final String STROKE = "Stroke";
+	
+	public static final String NONE = "Sem Stroke";
+	
+	public static final String JOIN_MITER = "Join Miter";
+	public static final String JOIN_ROUND = "Join Round";
+	public static final String WITH_DASH = "With Dash";
+	
 	PrinterJob pj;
 	MyPanel panel2;
 	
@@ -58,6 +66,28 @@ public class Java2D extends JFrame implements ActionListener{
 		mI.addActionListener(this); 
 		menu.add(mI); 
 		mb.add(menu); 
+		
+		menu = new JMenu(STROKE);
+		
+		mI = new JMenuItem(NONE);
+		mI.addActionListener(this); 
+		menu.add(mI);
+		
+		
+		mI = new JMenuItem(JOIN_MITER);
+		mI.addActionListener(this); 
+		menu.add(mI);
+		
+		mI = new JMenuItem(JOIN_ROUND);
+		mI.addActionListener(this); 
+		menu.add(mI);
+		
+		mI = new JMenuItem(WITH_DASH);
+		mI.addActionListener(this); 
+		menu.add(mI);
+		
+		
+		mb.add(menu);
 		
 		
 		//Printer
@@ -91,8 +121,29 @@ public class Java2D extends JFrame implements ActionListener{
 		case EXIT:
 			System.exit(0);
 			break;
+			
+		case NONE:
+			MyPanel.strokeType = MyPanel.NONE;
+			break;
+			
+		case JOIN_MITER:
+			MyPanel.strokeType = MyPanel.JOIN_MITER;
+			break;
+
+		case JOIN_ROUND:
+			MyPanel.strokeType = MyPanel.JOIN_ROUND;
+			break;
+
+		case WITH_DASH:
+			MyPanel.strokeType = MyPanel.WITH_DASH;
+			break;
 
 		}
+
+	
+		
 	}
+	
+
 }
 

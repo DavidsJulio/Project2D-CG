@@ -91,6 +91,16 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 	//Mouse aux
 	boolean selected = false;
 	
+	//Stroke
+	Stroke stroke;
+	public static final int NONE = 0;
+	public static final int JOIN_MITER = 2;
+	public static final int JOIN_ROUND = 1;
+
+	public static final int WITH_DASH = 3;
+	
+	
+	public static int strokeType;
 	
 	Thread thread;
 	
@@ -115,8 +125,16 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 		Graphics2D g2 = (Graphics2D) g;
 		
 		drawAll(g2);
+
 		AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f); 
 		g2.setComposite(ac);
+		
+		
+		if(strokeType != 0) {
+			stroke(g2);
+		}else {
+			g2.fill(plus);
+		}
 		
 		if(winningCondition()){
 			g2.setFont(fontCondition);
@@ -129,6 +147,7 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 			g2.setColor(Color.RED);
 			g2.drawString(strGameOver, panelWidth / 4, panelHeight / 2);
 		}
+				
 		
 //		if(RESET) {
 //			reset();
@@ -183,20 +202,21 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 		wall_7 = at.createTransformedShape(wall_7);
 		g2.fill(wall_7);
 		
+		
 		//Plus
 		plus = new Plus(-scale * 6, -scale * 6, scale * 12, scale * 12);
 		at.setToTranslation(panelWidth / 3 + scale, panelHeight / 3);
 		plus = at.createTransformedShape(plus);
-		g2.fill(plus);
 		
-		
-		g2.setColor(Color.GREEN);
-		//Move - 1
-		move1 = new Rectangle2D.Double(-20, -5, 40, 10);
-		//at.setToTranslation(panelWidth - scale*2, panelHeight - scale * 4);
-		at.setToTranslation(tx, ty);
-		move1 = at.createTransformedShape(move1);
-		g2.fill(move1);
+
+	
+//		g2.setColor(Color.GREEN);
+//		//Move - 1
+//		move1 = new Rectangle2D.Double(-20, -5, 40, 10);
+//		//at.setToTranslation(panelWidth - scale*2, panelHeight - scale * 4);
+//		at.setToTranslation(tx, ty);
+//		move1 = at.createTransformedShape(move1);
+//		g2.fill(move1);
 	
 		if(!bonus) {	
 			//Star
@@ -213,13 +233,17 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 		at.setToTranslation( translationX, translationY );
 		player = at.createTransformedShape( player );
 		GradientPaint gp = new GradientPaint(-scale, -scale, new Color(255,215,0), 2 * scale, 2 * scale, new Color(255,0,0), true);
+		//cyclic true, para se repetir
 		g2.setPaint(gp);
 		g2.fill( player );
+
 		
 		//Wall - 3
 		wall_3 = new Rectangle2D.Double(-scale * 2, - scale * 9, scale * 4, scale * 18);	
 		at.setToTranslation(panelWidth - scale * 6, panelHeight - scale * 9);
 		wall_3 = at.createTransformedShape(wall_3);		
+		
+		
 		
 		if(bonus) {
 			AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.4f); 
@@ -230,8 +254,7 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 		g2.setPaint(new TexturePaint(img, new Rectangle2D.Double(0, 0, panelWidth, panelHeight)));
 		g2.fill(wall_3);
 		
-		
-
+	
 	}
 
 							//Runnable
@@ -436,7 +459,7 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 			
 			if(plus != null) {
 				if(plus.contains(player.getBounds().getCenterX()+scale, player.getBounds().getCenterY()+scale) ||
-						plus.contains(player.getBounds().getCenterX()-scale, player.getBounds().getCenterY()-scale)) {
+						plus.contains(player.getBounds().getCenterX()-scale , player.getBounds().getCenterY()-scale)) {
 					collision = true;
 					STOP = true;
 				}
@@ -459,6 +482,36 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 		return false;
 	}
 
+	public void stroke(Graphics2D g2) {
+
+		switch (strokeType) {
+			
+		case JOIN_MITER:
+			stroke = new BasicStroke(20, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER);
+			g2.setStroke(stroke);
+			g2.draw(plus);
+			break;
+			
+		case JOIN_ROUND:
+			stroke = new BasicStroke(20, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_ROUND);
+			g2.setStroke(stroke);
+			g2.draw(plus);
+			break;
+
+		case WITH_DASH:		
+			float[] dashArray = { scale * 2, scale *2 };
+			float dashPhase = 8;
+			stroke = new BasicStroke(10, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, dashArray, dashPhase);
+			g2.setStroke(stroke);
+			g2.draw(plus);
+			break;
+		default:
+			break;
+		}
+		
+
+		
+	}
 	
 //	public void reset() {
 //		if(collision || winningCondition() || STOP) {
