@@ -5,6 +5,7 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Shape;
@@ -74,7 +75,7 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 	Shape plus = null;
 	//Moving obstacles
 	Shape move1 = null;
-	int tx = panelWidth - scale*2;
+	int tx = panelWidth -scale*2;
 	int ty = panelHeight - scale * 4;
 	
 	
@@ -189,13 +190,13 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 		g2.fill(plus);
 		
 		
-//		g2.setColor(Color.GREEN);
-//		//Move - 1
-//		move1 = new Rectangle2D.Double(-20, -5, 40, 10);
-//		//at.setToTranslation(panelWidth - scale*2, panelHeight - scale * 4);
-//		at.setToTranslation(tx, ty);
-//		move1 = at.createTransformedShape(move1);
-//		g2.fill(move1);
+		g2.setColor(Color.GREEN);
+		//Move - 1
+		move1 = new Rectangle2D.Double(-20, -5, 40, 10);
+		//at.setToTranslation(panelWidth - scale*2, panelHeight - scale * 4);
+		at.setToTranslation(tx, ty);
+		move1 = at.createTransformedShape(move1);
+		g2.fill(move1);
 	
 		if(!bonus) {	
 			//Star
@@ -211,7 +212,8 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 		player = new Ellipse2D.Double( -scale, -scale, 2 * scale, 2 * scale );
 		at.setToTranslation( translationX, translationY );
 		player = at.createTransformedShape( player );
-		g2.setColor( Color.RED );
+		GradientPaint gp = new GradientPaint(-scale, -scale, new Color(255,215,0), 2 * scale, 2 * scale, new Color(255,0,0), true);
+		g2.setPaint(gp);
 		g2.fill( player );
 		
 		//Wall - 3
@@ -227,6 +229,8 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 		
 		g2.setPaint(new TexturePaint(img, new Rectangle2D.Double(0, 0, panelWidth, panelHeight)));
 		g2.fill(wall_3);
+		
+		
 
 	}
 
@@ -239,7 +243,7 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 		
 			translationX += vxPlayer;
 			translationY += vyPlayer;
-			
+
 			collisionBorders();
 			if(star1 != null) {
 				bonusStar();
@@ -380,61 +384,62 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 	}
 	
 	public void collisionWalls() {
-	
-		if(wall_1 != null) {
-			if(player.intersects(wall_1.getBounds())) {
-				collision = true;
-				STOP = true;
+		if(player!= null) {
+			if(wall_1 != null) {
+				if(player.intersects(wall_1.getBounds())) {
+					collision = true;
+					STOP = true;
+				}
 			}
-		}
-		
-		if(wall_2 != null) {
-			if(player.intersects(wall_2.getBounds())) {
-				collision = true;
-				STOP = true;
+			
+			if(wall_2 != null) {
+				if(player.intersects(wall_2.getBounds())) {
+					collision = true;
+					STOP = true;
+				}
 			}
-		}
-		
-		if(wall_3 != null) {
-			if(player.intersects(wall_3.getBounds()) && !transparency) {
-				collision = true;
-				STOP = true;
+			
+			if(wall_3 != null) {
+				if(player.intersects(wall_3.getBounds()) && !transparency) {
+					collision = true;
+					STOP = true;
+				}
 			}
-		}
-		
-		if(wall_4 != null) {
-			if(player.intersects(wall_4.getBounds())) {
-				collision = true;
-				STOP = true;
+			
+			if(wall_4 != null) {
+				if(player.intersects(wall_4.getBounds())) {
+					collision = true;
+					STOP = true;
+				}
 			}
-		}
-		
-		if(wall_5 != null) {
-			if(player.intersects(wall_5.getBounds())) {
-				collision = true;
-				STOP = true;
+			
+			if(wall_5 != null) {
+				if(player.intersects(wall_5.getBounds())) {
+					collision = true;
+					STOP = true;
+				}
 			}
-		}
-		
-		if(wall_6 != null) {
-			if(player.intersects(wall_6.getBounds())) {
-				collision = true;
-				STOP = true;
+			
+			if(wall_6 != null) {
+				if(player.intersects(wall_6.getBounds())) {
+					collision = true;
+					STOP = true;
+				}
 			}
-		}
-		
-		if(wall_7 != null) {
-			if(player.intersects(wall_7.getBounds())) {
-				collision = true;
-				STOP = true;
+			
+			if(wall_7 != null) {
+				if(player.intersects(wall_7.getBounds())) {
+					collision = true;
+					STOP = true;
+				}
 			}
-		}
-		
-		if(plus != null) {
-			if(plus.contains(player.getBounds().getCenterX()+scale, player.getBounds().getCenterY()+scale) ||
-					plus.contains(player.getBounds().getCenterX()-scale, player.getBounds().getCenterY()-scale)) {
-				collision = true;
-				STOP = true;
+			
+			if(plus != null) {
+				if(plus.contains(player.getBounds().getCenterX()+scale, player.getBounds().getCenterY()+scale) ||
+						plus.contains(player.getBounds().getCenterX()-scale, player.getBounds().getCenterY()-scale)) {
+					collision = true;
+					STOP = true;
+				}
 			}
 		}
 		
