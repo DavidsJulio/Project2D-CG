@@ -30,7 +30,7 @@ public class Java2D extends JFrame implements ActionListener{
 	}
 	
 	public static final String GAME = "Game";
-	public static final String START = "Start";
+	public static final String RESTART = "Restart Game";
 	public static final String PRINT = "Print";
 	public static final String EXIT = "Exit";
 	
@@ -51,7 +51,7 @@ public class Java2D extends JFrame implements ActionListener{
 		
 		JMenu menu = new JMenu(GAME);
 		
-		JMenuItem mI = new JMenuItem(START);
+		JMenuItem mI = new JMenuItem(RESTART);
 		mI.addActionListener(this);
 		menu.add(mI);
 		
@@ -102,11 +102,8 @@ public class Java2D extends JFrame implements ActionListener{
 		String cmd = e.getActionCommand();
 		
 		switch (cmd) {
-		case START:
-//			MyPanel.RESET = true;
-//			System.out.print(MyPanel.RESET);
-//			printer.reset();
-			
+		case RESTART:
+			MyPanel.RESET = true;
 			break;
 		
 		case PRINT:

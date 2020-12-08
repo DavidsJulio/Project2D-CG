@@ -46,7 +46,7 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 	boolean bonus = false;
 	boolean transparency = false;
 	//reset
-//	protected static boolean RESET = false;
+	protected static boolean RESET = false;
 //	boolean RESET = false;
 	
 
@@ -136,6 +136,11 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 			g2.fill(plus);
 		}
 		
+		if(RESET) {
+			reset();
+			RESET = false;
+		}
+		
 		if(winningCondition()){
 			g2.setFont(fontCondition);
 			g2.setColor(Color.GREEN);
@@ -147,11 +152,9 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 			g2.setColor(Color.RED);
 			g2.drawString(strGameOver, panelWidth / 4, panelHeight / 2);
 		}
-				
 		
-//		if(RESET) {
-//			reset();
-//		}
+		
+		
 	}
 	
 	public void drawAll(Graphics g) {
@@ -364,11 +367,11 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 			translationX += vxPlayer;
 			translationY += vyPlayer;
 			
-			if(!collision && !STOP) {
-				collisionBorders();
-				collisionWalls();
-				repaint();
-			}
+//			if(!collision && !STOP) {
+//				collisionBorders();
+//				collisionWalls();
+//				repaint();
+//			}
 			//limpar o lixo, para que a bola não continue a andar
 			vyPlayer = 0;
 			vxPlayer = 0;	
@@ -513,15 +516,13 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 		
 	}
 	
-//	public void reset() {
-//		if(collision || winningCondition() || STOP) {
-//			translationX = originX;
-//			translationY = originY;
-//			collision = false;
-//			STOP = false;
-//			win = false;
-//		}
-//	}
+	public void reset() {
+			translationX = originX;
+			translationY = originY;	
+			STOP = false;
+			win = false;
+			collision = false;
+	}
 		
 	@Override
 	public int print(Graphics graphics, PageFormat pageFormat, int pageIndex) throws PrinterException {
