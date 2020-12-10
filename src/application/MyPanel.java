@@ -73,15 +73,30 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 	Shape wall_6 = null;
 	Shape wall_7 = null;
 	Shape plus = null;
+	
 	//Moving obstacles
 	Shape move1 = null;
-	int tx = panelWidth -scale*2;
-	int ty = panelHeight - scale * 4;
+	int move1tx = panelWidth + scale * 8; //600 + 120
+	int move1OriginTx = panelWidth + scale * 8;
+	int move1ty = panelHeight - scale * 4;
 	
+	Shape move2 = null;
+	int move2tx = panelWidth - scale * 6; //300 - 90
+	int move2ty = scale * 3;
+	int move2OriginTy = scale * 3;	
+	
+	Shape move3 = null;
+	int move3tx = panelWidth/2 - scale*2; //300 - 30
+	int move3OriginTx = panelWidth/2 - scale*2;	
+	int move3ty = panelHeight/3;
+	
+	Shape move4 = null;
+	int move4tx = panelWidth/3 + scale; //200 + 15
+	int move4ty = panelHeight/4;
+	int move4OriginTy = panelWidth/4;	
 	
 	//Star 
 	Shape star1 = null;
-	//Stroke stroke = new BasicStroke(20, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
 	
 	//Goal
 	Font font = new Font("Monospaced", Font.BOLD, 20);
@@ -130,12 +145,6 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 		g2.setComposite(ac);
 		
 		
-		if(strokeType != 0) {
-			stroke(g2);
-		}else {
-			g2.fill(plus);
-		}
-		
 		if(RESET) {
 			reset();
 			RESET = false;
@@ -165,6 +174,34 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 		g2.setFont(font);
 		g2.setColor(Color.YELLOW);
 		g2.drawString(goal, panelWidth - 50, panelHeight - scale);
+		
+		
+		g2.setPaint(new GradientPaint(40, 10, new Color(0,0,255), 0, 0, new Color(0,255,255), true));
+		
+		//Move - 1
+		move1 = new Rectangle2D.Double(-20, -5, 40, 10);
+		//at.setToTranslation(panelWidth - scale*2, panelHeight - scale * 4);
+		at.setToTranslation(move1tx, move1ty);
+		move1 = at.createTransformedShape(move1);
+		g2.fill(move1);
+		
+		move2 = new Rectangle2D.Double(-5,-20,10, 40);
+		//at.setToTranslation(panelWidth - scale*2, panelHeight - scale * 4);
+		at.setToTranslation(move2tx, move2ty);
+		move2 = at.createTransformedShape(move2);
+		g2.fill(move2);
+		
+		move3 = new Rectangle2D.Double(-20, -5, 40, 10);
+		//at.setToTranslation(panelWidth - scale*2, panelHeight - scale * 4);
+		at.setToTranslation(move3tx, move3ty);
+		move3 = at.createTransformedShape(move3);
+		g2.fill(move3);
+		
+		move4 = new Rectangle2D.Double(-5,-20,10, 40);
+		//at.setToTranslation(panelWidth - scale*2, panelHeight - scale * 4);
+		at.setToTranslation(move4tx, move4ty);
+		move4 = at.createTransformedShape(move4);
+		g2.fill(move4);
 
 		g2.setPaint(new TexturePaint(img, new Rectangle2D.Double(0, 0, panelWidth, panelHeight)));
 		
@@ -211,15 +248,12 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 		at.setToTranslation(panelWidth / 3 + scale, panelHeight / 3);
 		plus = at.createTransformedShape(plus);
 		
+		if(strokeType != 0) {
+			stroke(g2);
+		}else {
+			g2.fill(plus);
+		}
 
-	
-//		g2.setColor(Color.GREEN);
-//		//Move - 1
-//		move1 = new Rectangle2D.Double(-20, -5, 40, 10);
-//		//at.setToTranslation(panelWidth - scale*2, panelHeight - scale * 4);
-//		at.setToTranslation(tx, ty);
-//		move1 = at.createTransformedShape(move1);
-//		g2.fill(move1);
 	
 		if(!bonus) {	
 			//Star
@@ -264,12 +298,15 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 	@Override
 	public void run() {
 		
+		
 		while(!STOP) {
 			repaint();
 		
 			translationX += vxPlayer;
 			translationY += vyPlayer;
 
+			
+			movingWalls();
 			collisionBorders();
 			if(star1 != null) {
 				bonusStar();
@@ -367,11 +404,6 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 			translationX += vxPlayer;
 			translationY += vyPlayer;
 			
-//			if(!collision && !STOP) {
-//				collisionBorders();
-//				collisionWalls();
-//				repaint();
-//			}
 			//limpar o lixo, para que a bola não continue a andar
 			vyPlayer = 0;
 			vxPlayer = 0;	
@@ -382,6 +414,29 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 	public void mouseMoved(MouseEvent e) {
 	}
 												//AUX
+	public void movingWalls() {
+		
+		move1tx = move1tx - 2;
+		if( move1tx < panelWidth - scale * 6) {
+			move1tx = move1OriginTx;
+		}
+		
+		move2ty = move2ty + 3;
+		if( move2ty > panelHeight - scale * 14) {
+			move2ty = move2OriginTy;
+		}
+		
+		move3tx = move3tx + 2;
+		if(move3tx > panelWidth - scale * 14) {
+			move3tx = move3OriginTx;
+		}
+		
+		move4ty = move4ty - 2;
+		if(move4ty < -scale * 2) {
+			move4ty = move4OriginTy;
+		}
+				
+	}
 	
 	public void collisionBorders() { //colisao com as paredes
 		if(translationX - scale < 0) { //Colisao parede esquerda			
@@ -463,6 +518,35 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 			if(plus != null) {
 				if(plus.contains(player.getBounds().getCenterX()+scale, player.getBounds().getCenterY()+scale) ||
 						plus.contains(player.getBounds().getCenterX()-scale , player.getBounds().getCenterY()-scale)) {
+					collision = true;
+					STOP = true;
+				}
+			}
+			
+			//moving walls
+			if(move1 != null) {
+				if(player.intersects(move1.getBounds())) {
+					collision = true;
+					STOP = true;
+				}
+			}
+			
+			if(move2 != null) {
+				if(player.intersects(move2.getBounds())) {
+					collision = true;
+					STOP = true;
+				}
+			}
+			
+			if(move3 != null) {
+				if(player.intersects(move3.getBounds())) {
+					collision = true;
+					STOP = true;
+				}
+			}
+			
+			if(move4 != null) {
+				if(player.intersects(move4.getBounds())) {
 					collision = true;
 					STOP = true;
 				}
