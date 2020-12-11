@@ -84,15 +84,12 @@ public class Java2D extends JFrame implements ActionListener{
 		
 		mI = new JMenuItem(WITH_DASH);
 		mI.addActionListener(this); 
-		menu.add(mI);
-		
+		menu.add(mI);	
 		
 		mb.add(menu);
-		
-		
+
 		//Printer
 		panel2 = new MyPanel();
-		
 		pj = PrinterJob.getPrinterJob();
 		pj.setPrintable(panel2);
 	}
@@ -134,13 +131,7 @@ public class Java2D extends JFrame implements ActionListener{
 		case WITH_DASH:
 			MyPanel.strokeType = MyPanel.WITH_DASH;
 			break;
-
-		}
-
-	
-		
+		}	
 	}
-	
-
 }
 

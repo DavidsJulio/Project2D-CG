@@ -35,30 +35,35 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 	int panelHeight = 400;
 	
 	int scale = 15;
+	//Origin Player
 	int originX = scale * 2;
 	int originY = panelHeight - scale * 2;
+	
+	//Back Texture
 	Color backColor = (Color.DARK_GRAY);
 	BufferedImage img = utils.Utils.readImage(this, "images/Brick_Wall.jpg");
 
+	//Conditions
 	boolean win = false;
 	boolean collision = false;
 	public static boolean STOP = false;
 	boolean bonus = false;
 	boolean transparency = false;
-	//reset
-	protected static boolean RESET = false;
-//	boolean RESET = false;
-	
+	public static boolean RESET = false;
 
+	//Fonts
 	Font fontCondition = new Font("Monospaced", Font.BOLD, 50);
 	String strWin = "Victory";
 	String strGameOver = "Game Over";
 	
-	AffineTransform at = new AffineTransform();
+	//Goal
+	Font font = new Font("Monospaced", Font.BOLD, 20);
+	String goal = "Goal";
+	Shape goalBox = null;
+	
 	
 	//Player - Using ellipse
 	Shape player = null;
-	
 	int translationX = scale * 2;
 	int translationY = panelHeight - scale * 2;
 	int vxPlayer = 0;
@@ -73,6 +78,8 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 	Shape wall_6 = null;
 	Shape wall_7 = null;
 	Shape plus = null;
+	//Star 
+	Shape star1 = null;
 	
 	//Moving obstacles
 	Shape move1 = null;
@@ -95,29 +102,20 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 	int move4ty = panelHeight/4;
 	int move4OriginTy = panelWidth/4;	
 	
-	//Star 
-	Shape star1 = null;
-	
-	//Goal
-	Font font = new Font("Monospaced", Font.BOLD, 20);
-	String goal = "Goal";
-	Shape goalBox = null;
-	
+
 	//Mouse aux
 	boolean selected = false;
 	
 	//Stroke
 	Stroke stroke;
+	public static int strokeType;
 	public static final int NONE = 0;
 	public static final int JOIN_MITER = 2;
 	public static final int JOIN_ROUND = 1;
-
 	public static final int WITH_DASH = 3;
 	
-	
-	public static int strokeType;
-	
 	Thread thread;
+	AffineTransform at = new AffineTransform();
 	
 	public MyPanel() {	
 		setPreferredSize( new Dimension( panelWidth, panelHeight ) ); 
@@ -144,7 +142,6 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 		AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f); 
 		g2.setComposite(ac);
 		
-		
 		if(RESET) {
 			reset();
 			RESET = false;
@@ -162,8 +159,6 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 			g2.drawString(strGameOver, panelWidth / 4, panelHeight / 2);
 		}
 		
-		
-		
 	}
 	
 	public void drawAll(Graphics g) {
@@ -175,7 +170,7 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 		g2.setColor(Color.YELLOW);
 		g2.drawString(goal, panelWidth - 50, panelHeight - scale);
 		
-		
+		//Moving Walls
 		g2.setPaint(new GradientPaint(40, 10, new Color(0,0,255), 0, 0, new Color(0,255,255), true));
 		
 		//Move - 1
@@ -202,7 +197,8 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 		at.setToTranslation(move4tx, move4ty);
 		move4 = at.createTransformedShape(move4);
 		g2.fill(move4);
-
+		
+		//Walls
 		g2.setPaint(new TexturePaint(img, new Rectangle2D.Double(0, 0, panelWidth, panelHeight)));
 		
 		//Obstacles
@@ -242,7 +238,6 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 		wall_7 = at.createTransformedShape(wall_7);
 		g2.fill(wall_7);
 		
-		
 		//Plus
 		plus = new Plus(-scale * 6, -scale * 6, scale * 12, scale * 12);
 		at.setToTranslation(panelWidth / 3 + scale, panelHeight / 3);
@@ -264,7 +259,6 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 			g2.fill( star1 );
 		}
 		
-		
 		//Player
 		player = new Ellipse2D.Double( -scale, -scale, 2 * scale, 2 * scale );
 		at.setToTranslation( translationX, translationY );
@@ -273,15 +267,12 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 		//cyclic true, para se repetir
 		g2.setPaint(gp);
 		g2.fill( player );
-
-		
+	
 		//Wall - 3
 		wall_3 = new Rectangle2D.Double(-scale * 2, - scale * 9, scale * 4, scale * 18);	
 		at.setToTranslation(panelWidth - scale * 6, panelHeight - scale * 9);
 		wall_3 = at.createTransformedShape(wall_3);		
-		
-		
-		
+
 		if(bonus) {
 			AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.4f); 
 			g2.setComposite(ac);
@@ -298,14 +289,12 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 	@Override
 	public void run() {
 		
-		
 		while(!STOP) {
 			repaint();
 		
 			translationX += vxPlayer;
 			translationY += vyPlayer;
 
-			
 			movingWalls();
 			collisionBorders();
 			if(star1 != null) {
@@ -313,17 +302,14 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 			}
 			
 			collisionWalls();
-		
 			try {
 				Thread.sleep(50);
 			}catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-		}
-		
+		}		
 	}
-	
-	
+
 							//Teclado - KeyListener
 	@Override
 	public void keyTyped(KeyEvent e) {
@@ -574,7 +560,7 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 		switch (strokeType) {
 			
 		case JOIN_MITER:
-			stroke = new BasicStroke(20, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER);
+			stroke = new BasicStroke(10, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER);
 			g2.setStroke(stroke);
 			g2.draw(plus);
 			break;
@@ -592,17 +578,17 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 			g2.setStroke(stroke);
 			g2.draw(plus);
 			break;
+			
 		default:
 			break;
 		}
-		
-
-		
 	}
 	
 	public void reset() {
 			translationX = originX;
 			translationY = originY;	
+			vyPlayer = 0;
+			vxPlayer = 0;	
 			STOP = false;
 			win = false;
 			collision = false;
