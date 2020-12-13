@@ -102,6 +102,7 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 	int move4ty = panelHeight/4;
 	int move4OriginTy = panelWidth/4;	
 	
+	Shape ellipse = null;
 
 	//Mouse aux
 	boolean selected = false;
@@ -238,6 +239,8 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 		wall_7 = at.createTransformedShape(wall_7);
 		g2.fill(wall_7);
 		
+		
+		
 		//Plus
 		plus = new Plus(-scale * 6, -scale * 6, scale * 12, scale * 12);
 		at.setToTranslation(panelWidth / 3 + scale, panelHeight / 3);
@@ -281,7 +284,6 @@ public class MyPanel extends JPanel implements Runnable, KeyListener, MouseListe
 		
 		g2.setPaint(new TexturePaint(img, new Rectangle2D.Double(0, 0, panelWidth, panelHeight)));
 		g2.fill(wall_3);
-		
 	
 	}
 
